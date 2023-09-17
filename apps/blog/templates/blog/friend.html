@@ -1,0 +1,59 @@
+{% extends 'blog/base.html' %}
+{% load static blog_tags %}
+
+{% block head_title %}友情链接，申请友联{% endblock %}
+
+{% block metas %}
+  <meta name="description"
+        content="本网站是一个采用django+bootstrap4搭建的个人博客，本着学习和分享的精神，博客项目开源，源代码可以到我的Github中查看，网站建站历程可以查看页面Timeline内容。">
+  <meta name="keywords" content="friend页面,友情链接,申请友联">
+{% endblock %}
+
+{% block top-file %}
+{% endblock %}
+
+{% block base_content %}
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="friend-block">
+          <h2 class="text-info"><a href="{% url 'blog:friend_add' %}">申请友链</a></h2>
+          <div class="friend-list">
+            {% for friend in friend_list %}
+              <a href="{{ friend.get_home_url }}" target="_blank">
+                <div class="friend-container"
+                     style='background-image: url("{{ friend.logo.url }}");'>
+                  <div class="friend-img">
+                    <img src="{{ friend.logo.url }}" alt="{{ friend.description }}">
+                    <div class="friend-description">
+                      {{ friend.description|my_slice:":23" }}
+                    </div>
+                  </div>
+                  <div class="friend-title"><span>{{ friend.name }}</span></div>
+                </div>
+              </a>
+            {% endfor %}
+          </div>
+          {% get_friends False True as not_show_friends %}
+          {% if not_show_friends %}
+            <h2>失联友链</h2>
+            <div class="friend-list not-show-friend">
+              {% for friend in not_show_friends %}
+                <a>
+                  <div class="friend-container"
+                       style='background-image: url("{{ friend.logo.url }}");'>
+                    <div class="friend-img">
+                      <img src="{{ friend.logo.url }}" alt="{{ friend.description }}">
+                      <div class="friend-description">{{ friend.not_show_reason }}</div>
+                    </div>
+                    <div class="friend-title"><span>{{ friend.name }}</span></div>
+                  </div>
+                </a>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
